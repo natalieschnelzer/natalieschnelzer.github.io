@@ -4,7 +4,8 @@ mainGameState.preload = function() {
     console.log("Pre-loading the Game");
     game.load.image("space-bg", "assets/images/space-bg.jpg");
     game.load.image("spaceship", "assets/images/spaceship.png");
-    
+    game.load.image("alien", "assets/images/alien.png");
+    game.load.audio("game-music", "assets/music/maingame.mp3");
 }
 
 mainGameState.create = function() { 
@@ -20,22 +21,48 @@ mainGameState.create = function() {
     game.physics.arcade.enable(this.spaceship);
     
     this.cursors = game.input.keyboard.createCursorKeys();
-//    this.spaceship.body.velocity.x = 200;
+    
+    //music
+    this.music = game.add.audio("game-music");
+    this.music.play();
+    this.music.volume = 0.5;
+    this.music.loop = true;
+    
+     //aliens
+    this.alienTimer = 2.0;
 }
 
 mainGameState.update = function() {
     
+    //moving the spacechip left & right
     if (this.cursors.right.isDown) {
-    console.log("RIGHT PRESSED");
+        this.spaceship.body.velocity.x = 200;
+    } 
+    else if (this.cursors.left.isDown) {
+        this.spaceship.body.velocity.x = -200;
+    }
+    else {
+        this.spaceship.body.velocity.x = 0;
     }
     
-//    if (pressing-right){
-//        set-right-velocity
-//    } else if (pressing-left){
-//        set-left-velocity
-//    } else {
-//        set-zero-velocity
-//    }
+    //to stop moving out from the screen
+    if ((this.spaceship.x > game.width) && (this.spaceship.body.velocity.x > 0)) {
+        this.spaceship.body.velocity.x = 0;
+    }
+
+    if ((this.spaceship.x < 0) && (this.spaceship.body.velocity.x < 0)) {
+        this.spaceship.body.velocity.x = 0;
+    }
+    
+    //aliens
+    this.alienTimer -= game.time.physicsElapsed;
+    
+    if (this.alienTimer <= 0.0){
+        console.log("SPAWN ALIEN");
+        this.alienTimer = 2.0;
+    }
+    
+    //console.log(game.time.physicsElapsed);
     
 
 }
