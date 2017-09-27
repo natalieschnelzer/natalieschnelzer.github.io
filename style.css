@@ -1,23 +1,46 @@
-body {
-  background-color: #ffffff;
-  margin: auto;
-  padding: 0px;
-  font-family: Arial, Helvetica, sans-serif;
-  font-weight: lighter;
-  color: #333;
-}
+@import url(http://fonts.googleapis.com/css?family=Oswald);
 
 h1 {
-  margin: 0px;
-  padding: 40px 0px 0px 0px;
-  font-size: 60px;
-  text-align: center;
+    margin: 20px;
+    padding: 0px;
+    text-align: center;
+    font-size: 70px;
+    color: #333;
+    font-family: Oswald;
 }
 
 h2 {
-  font-size: 20px;
-  text-align: center;
-    padding: 0px 0px 50px 0px;
+    font-size: 20px;
+    text-align: center;
+    margin: 10px;
+    color: #333;
+    font-family: Oswald;
+    font-weight: lighter;
+}
+
+.parallax {
+    background-image: url(assets/images/header-bg.jpg);
+    height: 500px;
+    width: auto;
+    background-attachment: fixed;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: auto;
+}
+
+.cover{
+    height: 800px;
+    background-image: url(assets/images/stars-bg.png);
+    background-repeat: repeat;
+    background-position: top;
+    padding-top: 200px;
+}
+
+body {
+    height: 100%;
+    background-color: #ffffff;
+    margin: auto;
+    padding: 0px;
 }
 
 #gameContainer {

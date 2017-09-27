@@ -6,13 +6,23 @@
 <head>
     <title>Space Avengers</title>
     <script src="libs/phaser.min.js"></script>
+    <script src="source/maingamestate.js"></script>
 </head>
 <body>
-    <h1>Space Avengers</h1>
-    <h2> The first game by Natalie Schnelzer</h2>
-    <div id="gameContainer"></div>
-    <script>
+    <div class="parallax">
+    <h1></h1>
+    <h2></h2>
+    </div>
+    <div class="cover">
+        <div id="gameContainer"></div>
+        <script>
         var game = new Phaser.Game(500, 500, Phaser.AUTO, 'gameContainer');
+        game.state.add("MainGame", mainGameState);
+        game.state.start("MainGame");
     </script>
+    </div>
+    
 </body>
+<footer>
+</footer>
 </html>
