@@ -5,7 +5,8 @@ mainGameState.preload = function() {
     game.load.image("space-bg", "assets/images/space-bg.jpg");
     game.load.image("spaceship", "assets/images/spaceship.png");
     game.load.image("alien", "assets/images/alien.png");
-    game.load.audio("game-music", "assets/music/maingame.mp3");
+    game.load.image("bullet-simple", "assetes/images/bullet-simple.png");
+    game.load.audio("game-music", "assets/music/maingame.mp3");   
 }
 
 mainGameState.create = function() { 
@@ -30,6 +31,8 @@ mainGameState.create = function() {
     
      //aliens
     this.alienTimer = 2.0;
+    this.aliens = game.add.group();
+    
 }
 
 mainGameState.update = function() {
@@ -60,9 +63,49 @@ mainGameState.update = function() {
     if (this.alienTimer <= 0.0){
         console.log("SPAWN ALIEN");
         this.alienTimer = 2.0;
+        this.spawnAliens();
     }
     
-    //console.log(game.time.physicsElapsed);
-    
+    //clean up the aliens out of the screen
+    for( var i = 0; i < this.aliens.children.length; i++ ) {
+        if ( this.aliens.children[i].y > (game.height + 200) ) {
+            this.aliens.children[i].destroy();
+        }
+    }
 
+}
+
+mainGameState.spawnAliens = function(){
+    
+    var alienX = game.rnd.integerInRange(50, 450);
+    var alienY = -50;
+    
+    var alien = game.add.sprite(alienX, alienY, 'alien');
+    alien.anchor.setTo(0.5, 0.5);
+    
+    game.physics.startSystem(Phaser.Physics.ARCADE);
+    game.physics.arcade.enable(alien);
+    
+    alien.body.velocity.y = game.rnd.integerInRange(60, 200);
+    
+    //grouping aliens
+    this.aliens.add(alien);
+}
+
+mainGameState.spawnBullets = function(){
+    
+    var bulletX = 50;
+    var bulletY = 50;
+    
+    var bullet = game.add.sprite(bulletX, bulletY, 'bullet-simple');
+    bullet.anchor.setTo(0.5, 0.5);
+    
+    game.physics.startSystem(Phaser.Physics.ARCADE);
+    game.physics.arcade.enable(bullet);
+    
+    bullet.body.velocity.y = -200;
+    
+    //grouping bullets
+    this.bullets.add(bullet);
+    
 }
