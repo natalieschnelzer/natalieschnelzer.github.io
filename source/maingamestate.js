@@ -5,8 +5,9 @@ mainGameState.preload = function() {
     game.load.image("space-bg", "assets/images/space-bg.jpg");
     game.load.image("spaceship", "assets/images/spaceship.png");
     game.load.image("alien", "assets/images/alien.png");
-    game.load.image("bullet-simple", "assetes/images/bullet-simple.png");
-    game.load.audio("game-music", "assets/music/maingame.mp3");   
+    game.load.image("bulletSimple", "assets/images/bulletSimple.png");
+    game.load.audio("game-music", "assets/music/maingame.mp3");
+
 }
 
 mainGameState.create = function() { 
@@ -29,9 +30,38 @@ mainGameState.create = function() {
     this.music.volume = 0.5;
     this.music.loop = true;
     
-     //aliens
+    //aliens
     this.alienTimer = 2.0;
     this.aliens = game.add.group();
+    
+    //firering
+    this.fireKey = game.input.keyboard.addKey(Phaser.Keyboard.Z);
+    this.bulletTimer = 1.0;
+    this.bullets = game.add.group();
+    
+    //score
+    this.playerScore = 0;
+    var textStyle = {font: "16px Arial", fill: "#ffffff", alight: "center"}
+    
+    this.scoreTitle = game.add.text(game.width * 0.9, 30, "SCORE", textStyle);
+    this.scoreTitle.fixedToCamera = true;
+    this.scoreTitle.anchor.setTo(0.5, 0.5);
+    
+    this.scoreValue = game.add.text(game.width * 0.9, 50, "0", textStyle);
+    this.scoreValue.fixedToCamera = true;
+    this.scoreValue.anchor.setTo(0.5, 0.5);
+    
+    //lives
+    this.playerLives = 0;
+    var textStyle = {font: "16px Arial", fill: "#ffffff", alight: "center"}
+    
+    this.livesTitle = game.add.text(game.width * 0.1, 30, "LIVES", textStyle);
+    this.livesTitle.fixedToCamera = true;
+    this.livesTitle.anchor.setTo(0.5, 0.5);
+    
+    this.livesValue = game.add.text(game.width * 0.1, 50, "0", textStyle);
+    this.livesValue.fixedToCamera = true;
+    this.livesValue.anchor.setTo(0.5, 0.5);
     
 }
 
@@ -57,9 +87,8 @@ mainGameState.update = function() {
         this.spaceship.body.velocity.x = 0;
     }
     
-    //aliens
+    //aliens dropping every 2 sec
     this.alienTimer -= game.time.physicsElapsed;
-    
     if (this.alienTimer <= 0.0){
         console.log("SPAWN ALIEN");
         this.alienTimer = 2.0;
@@ -72,7 +101,28 @@ mainGameState.update = function() {
             this.aliens.children[i].destroy();
         }
     }
-
+    
+    //fireing with z
+    if (this.fireKey.isDown) {
+        console.log("FIRE KEY PRESSED");
+        this.spawnBulletSimple();
+    }
+    
+    //timer fireing
+    this.bulletTimer -= game.time.physicsElapsed;
+    
+    //clean up the bullets out of the screen
+    for( var i = 0; i < this.bullets.children.length; i++ ) {
+        if ( this.bullets.children[i].y < (-100) ) {
+            this.bullets.children[i].destroy();
+        }
+    }
+    
+    //checking if the aliens & bullets collide
+    game.physics.arcade.collide(this.aliens, this.bullets, mainGameState.onAlienBulletCollision, null, this);
+    
+    //adding points
+    this.scoreValue.setText(this.playerScore);
 }
 
 mainGameState.spawnAliens = function(){
@@ -92,20 +142,29 @@ mainGameState.spawnAliens = function(){
     this.aliens.add(alien);
 }
 
-mainGameState.spawnBullets = function(){
+mainGameState.spawnBulletSimple = function(){
     
-    var bulletX = 50;
-    var bulletY = 50;
+    if (this.bulletTimer <0){
+        this.bulletTimer = 1;
+        
+        var bulletSimple = game.add.sprite(this.spaceship.x, this.spaceship.y, 'bulletSimple');
     
-    var bullet = game.add.sprite(bulletX, bulletY, 'bullet-simple');
-    bullet.anchor.setTo(0.5, 0.5);
+        bulletSimple.anchor.setTo(0.5, 0.5);
     
-    game.physics.startSystem(Phaser.Physics.ARCADE);
-    game.physics.arcade.enable(bullet);
+        game.physics.arcade.enable(bulletSimple);
     
-    bullet.body.velocity.y = -200;
+        bulletSimple.body.velocity.setTo(0, -150);
+        
+        //grouping bullets
+        this.bullets.add(bulletSimple);
+    }
+}
+
+mainGameState.onAlienBulletCollision = function(object1, object2){
+    console.log("COLLISION");
+    object1.pendingDestroy = true;
+    object2.pendingDestroy = true;
     
-    //grouping bullets
-    this.bullets.add(bullet);
-    
+    this.playerScore += 1;
+    console.log("SCORE");
 }
