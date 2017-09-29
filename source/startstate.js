@@ -17,6 +17,3 @@ startState.update = function(){
 startState.onClickAction = function(){
     game.state.start("MainGame");
 }
-
-
-

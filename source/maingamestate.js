@@ -71,10 +71,10 @@ mainGameState.create = function() {
     this.livesValue.anchor.setTo(0.5, 0.5);
     
     //exploading stars
-//    var = emitter;
-//    emitter = game.add.emitter(0, 0, 100);
-//    emitter.makeParticles("bulletStar");
-//    emitter.gravity = 200;
+    this.emitter = game.add.emitter(0, 0, 100);
+    this.emitter.makeParticles("bulletStar");
+    this.emitter.gravity = 200;
+    
 }
 
 //-----------------UPDATE---------------------
@@ -179,7 +179,7 @@ mainGameState.spawnAliens = function(){
     this.aliens.add(alien);
 }
 
------------------SPAWN STARS---------------------
+//-----------------SPAWN STARS---------------------
 
 mainGameState.spawnBulletStar = function(){
     
@@ -217,7 +217,7 @@ mainGameState.onAlienSpaceshipCollision = function(object1, object2){
     } else {
         object2.pendingDestroy = true;
     }
-    
+    this.emitter.start(true, 2000, null, 10);
     this.playerLives -= 1;
     console.log("LIVES");
 }
