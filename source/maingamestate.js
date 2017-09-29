@@ -8,6 +8,7 @@ mainGameState.preload = function() {
     game.load.image("tilebg2", "assets/images/tilebg2.png");
     game.load.image("spaceship", "assets/images/spaceship.png");
     game.load.image("alien", "assets/images/alien.png");
+    game.load.image("starPoint", "assets/images/starPoint.png");
     game.load.image("bulletStar", "assets/images/bulletStar.png");
     game.load.audio("game-music", "assets/music/maingame.mp3");
 
@@ -40,6 +41,10 @@ mainGameState.create = function() {
     //aliens
     this.alienTimer = 1;
     this.aliens = game.add.group();
+    
+    //stars
+    this.starTimer = 5;
+    this.stars = game.add.group();
     
     //firering
     this.fireKey = game.input.keyboard.addKey(Phaser.Keyboard.Z);
@@ -119,6 +124,21 @@ mainGameState.update = function() {
         }
     }
     
+     //stars dropping every 5 sec
+//    this.starTimer -= game.time.physicsElapsed;
+//    if (this.starTimer <= 0.0){
+//        console.log("SPAWN STAR");
+//        this.starTimer = 5;
+//        this.spawnStars();
+//    }
+    
+    //clean up the stars out of the screen
+    for( var i = 0; i < this.stars.children.length; i++ ) {
+        if ( this.stars.children[i].y > (game.height + 200) ) {
+            this.stars.children[i].destroy();
+        }
+    }
+    
     //fireing with z
     if (this.fireKey.isDown) {
         console.log("FIRE KEY PRESSED");
@@ -146,6 +166,9 @@ mainGameState.update = function() {
     
     //loosing lives
     this.livesValue.setText(this.playerLives);
+    
+    //checking if the stars & spaceship collide
+//    game.physics.arcade.collide(this.stars, this.spaceship, mainGameState.onStarSpaceShipCollision, null, this);
     
     //winning state when lives => 10
     if(this.playerScore >= 10){
@@ -215,18 +238,24 @@ mainGameState.onAlienSpaceshipCollision = function(object1, object2){
     if(object1.key.includes("alien")) {
         object1.pendingDestroy = true;
         this.emitter.x = object2.x;
-        this.emitter.y = object2.y;
+        this.emitter.y = (object2.y-55);
     } else {
         object2.pendingDestroy = true;
         this.emitter.x = object1.x;
-        this.emitter.y = object1.y;
+        this.emitter.y = (object1.y-55);
     }
     
     this.playerLives -= 1;
     console.log("LIVES");
     this.emitter.start(true, 2000, null, 10);
-    
 
 }
 
-//object.x = 40
+//------------------STAR/SPACESHIP COLLISION--------------------
+
+//mainGameState.onStarSpaceShipCollision = function(object1, object2){
+//    console.log("COLLISION");
+//    this.playerLives += 1;
+//    console.log("LIVES");
+//
+//}
