@@ -3,6 +3,7 @@ var mainGameState = {};
 mainGameState.preload = function() {
     console.log("Pre-loading the Game");
     game.load.image("space-bg", "assets/images/space-bg.jpg");
+    game.load.image("tilebg2", "assets/images/tilebg2.png");
     game.load.image("spaceship", "assets/images/spaceship.png");
     game.load.image("alien", "assets/images/alien.png");
     game.load.image("bulletStar", "assets/images/bulletStar.png");
@@ -12,9 +13,10 @@ mainGameState.preload = function() {
 
 mainGameState.create = function() { 
     game.add.sprite(0, 0, 'space-bg');
+    tilebg2 = game.add.tileSprite(0, 0, 500, 500, 'tilebg2');
     
     var shipX = game.width * 0.5;
-    var shipY = game.height * 0.83;
+    var shipY = game.height * 0.87;
     
     this.spaceship = game.add.sprite(shipX, shipY, 'spaceship');
     this.spaceship.anchor.setTo(0.5, 0.5, 'spaceship');
@@ -67,6 +69,9 @@ mainGameState.create = function() {
 }
 
 mainGameState.update = function() {
+    
+    //background scrolling
+    tilebg2.tilePosition.y += 1;
     
     //moving the spacechip left & right
     if (this.cursors.right.isDown) {
@@ -133,11 +138,13 @@ mainGameState.update = function() {
     
     //winning state when lives => 10
     if(this.playerScore >= 10){
+        this.music.stop();
         game.state.start("Winning");
     }
     
     //game over state when lives =< 0
     if(this.playerLives <= 0){
+        this.music.stop();
         game.state.start("GameOver");
     }
 }
@@ -164,7 +171,7 @@ mainGameState.spawnBulletStar = function(){
     if (this.bulletTimer <0){
         this.bulletTimer = 0.7;
         
-        var bulletStar = game.add.sprite(this.spaceship.x, this.spaceship.y, 'bulletStar');
+        var bulletStar = game.add.sprite(this.spaceship.x, (this.spaceship.y-55), 'bulletStar');
         bulletStar.anchor.setTo(0.5, 0.5);
     
         game.physics.arcade.enable(bulletStar);
