@@ -1,5 +1,7 @@
 var mainGameState = {};
 
+//-----------------PRELOAD---------------------
+
 mainGameState.preload = function() {
     console.log("Pre-loading the Game");
     game.load.image("space-bg", "assets/images/space-bg.jpg");
@@ -10,6 +12,8 @@ mainGameState.preload = function() {
     game.load.audio("game-music", "assets/music/maingame.mp3");
 
 }
+
+//-----------------CREATE---------------------
 
 mainGameState.create = function() { 
     game.add.sprite(0, 0, 'space-bg');
@@ -66,7 +70,14 @@ mainGameState.create = function() {
     this.livesValue.fixedToCamera = true;
     this.livesValue.anchor.setTo(0.5, 0.5);
     
+    //exploading stars
+//    var = emitter;
+//    emitter = game.add.emitter(0, 0, 100);
+//    emitter.makeParticles("bulletStar");
+//    emitter.gravity = 200;
 }
+
+//-----------------UPDATE---------------------
 
 mainGameState.update = function() {
     
@@ -149,6 +160,8 @@ mainGameState.update = function() {
     }
 }
 
+//-----------------SPAWN ALIENS---------------------
+
 mainGameState.spawnAliens = function(){
     
     var alienX = game.rnd.integerInRange(50, 450);
@@ -166,6 +179,8 @@ mainGameState.spawnAliens = function(){
     this.aliens.add(alien);
 }
 
+-----------------SPAWN STARS---------------------
+
 mainGameState.spawnBulletStar = function(){
     
     if (this.bulletTimer <0){
@@ -182,6 +197,8 @@ mainGameState.spawnBulletStar = function(){
     }
 }
 
+//-----------------ALIEN/BULLET COLLISION---------------------
+
 mainGameState.onAlienBulletCollision = function(object1, object2){
     console.log("COLLISION");
     object1.pendingDestroy = true;
@@ -190,6 +207,8 @@ mainGameState.onAlienBulletCollision = function(object1, object2){
     this.playerScore += 1;
     console.log("SCORE");
 }
+
+//------------------ALIEN/SPACESHIP COLLISION--------------------
 
 mainGameState.onAlienSpaceshipCollision = function(object1, object2){
     console.log("COLLISION");
